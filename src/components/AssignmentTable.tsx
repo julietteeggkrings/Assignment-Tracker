@@ -1,5 +1,6 @@
 import { Assignment, AssignmentStatus, AssignmentType, Class } from "@/types/assignment";
 import { calculateDaysUntilDue, getDayOfWeek, formatDate, getStatusColor, getUrgencyColor } from "@/lib/assignmentUtils";
+import { getContrastColor } from "@/lib/colorUtils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Trash2 } from "lucide-react";
@@ -14,15 +15,6 @@ interface AssignmentTableProps {
 }
 
 export const AssignmentTable = ({ assignments, classes, onUpdateStatus, onToggleToDoStatus, onDelete }: AssignmentTableProps) => {
-  const getColorClass = (color: string): string => {
-    const colorMap: Record<string, string> = {
-      "pastel-pink": "bg-pastel-pink",
-      "pastel-peach": "bg-pastel-peach",
-      "pastel-lavender": "bg-pastel-lavender",
-      "pastel-mint": "bg-pastel-mint",
-    };
-    return colorMap[color] || "bg-card";
-  };
 
   return (
     <div className="overflow-x-auto rounded-lg border border-border shadow-sm">
@@ -48,12 +40,13 @@ export const AssignmentTable = ({ assignments, classes, onUpdateStatus, onToggle
             
             // Find the class color for this assignment
             const assignmentClass = classes.find(c => c.courseCode === assignment.classId);
-            const rowColorClass = getColorClass(assignmentClass?.color || "pastel-lavender");
+            const classColor = assignmentClass?.color || "#E5DEFF";
             
             return (
               <tr 
                 key={assignment.id} 
-                className={`border-b border-black transition-colors hover:brightness-95 ${rowColorClass} ${
+                style={{ backgroundColor: classColor }}
+                className={`border-b border-black transition-colors hover:brightness-95 ${
                   isCompletedOrSubmitted ? "line-through opacity-70" : ""
                 }`}
               >
@@ -75,7 +68,13 @@ export const AssignmentTable = ({ assignments, classes, onUpdateStatus, onToggle
                 <td className="px-4 py-3 text-sm">{getDayOfWeek(assignment.dueDate)}</td>
                 <td className="px-4 py-3 text-sm">{formatDate(assignment.dueDate)}</td>
                 <td className="px-4 py-3">
-                  <span className={`inline-block rounded-md px-2 py-1 text-xs font-medium border border-border/30 ${rowColorClass}`}>
+                  <span 
+                    className="inline-block rounded-md px-2 py-1 text-xs font-medium border border-border/30"
+                    style={{ 
+                      backgroundColor: classColor,
+                      color: getContrastColor(classColor)
+                    }}
+                  >
                     {assignment.className}
                   </span>
                 </td>

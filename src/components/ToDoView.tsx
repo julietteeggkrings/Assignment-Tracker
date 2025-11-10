@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatDate } from "@/lib/assignmentUtils";
+import { getContrastColor } from "@/lib/colorUtils";
 import { getToDoPriorityColor } from "@/lib/toDoUtils";
 import { ToDoPriority } from "@/types/assignment";
 import { Button } from "@/components/ui/button";
@@ -13,16 +14,6 @@ import { toast } from "@/hooks/use-toast";
 
 export const ToDoView = () => {
   const { assignments, classes, toggleToDoComplete, updateToDoPriority, toggleToDoStatus } = useAssignments();
-
-  const getColorClass = (color: string): string => {
-    const colorMap: Record<string, string> = {
-      "pastel-pink": "bg-pastel-pink",
-      "pastel-peach": "bg-pastel-peach",
-      "pastel-lavender": "bg-pastel-lavender",
-      "pastel-mint": "bg-pastel-mint",
-    };
-    return colorMap[color] || "bg-pastel-lavender";
-  };
 
   // Only show assignments that are added to To-Do list
   const toDoTasks = assignments
@@ -114,7 +105,7 @@ export const ToDoView = () => {
           <tbody>
             {toDoTasks.map(task => {
               const taskClass = classes.find(c => c.courseCode === task.classId);
-              const classColorClass = getColorClass(taskClass?.color || "pastel-lavender");
+              const classColor = taskClass?.color || "#E5DEFF";
               
               return (
               <tr
@@ -155,9 +146,13 @@ export const ToDoView = () => {
                 </td>
                 <td className="px-4 py-3">
                   <span
-                    className={`inline-block rounded-md px-2 py-1 text-xs font-medium ${classColorClass} ${
+                    className={`inline-block rounded-md px-2 py-1 text-xs font-medium ${
                       task.toDoCompleted ? "line-through" : ""
                     }`}
+                    style={{
+                      backgroundColor: classColor,
+                      color: getContrastColor(classColor)
+                    }}
                   >
                     {task.className}
                   </span>

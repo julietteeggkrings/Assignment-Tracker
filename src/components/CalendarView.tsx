@@ -21,6 +21,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { getContrastColor } from "@/lib/colorUtils";
 
 export const CalendarView = () => {
   const { assignments, classes, updateStatus } = useAssignments();
@@ -48,13 +49,7 @@ export const CalendarView = () => {
 
   const getClassColor = (classId: string): string => {
     const assignmentClass = classes.find(c => c.courseCode === classId);
-    const colorMap: Record<string, string> = {
-      "pastel-pink": "bg-pastel-pink text-foreground",
-      "pastel-peach": "bg-pastel-peach text-foreground",
-      "pastel-lavender": "bg-pastel-lavender text-foreground",
-      "pastel-mint": "bg-pastel-mint text-foreground",
-    };
-    return colorMap[assignmentClass?.color || "pastel-lavender"] || "bg-pastel-lavender text-foreground";
+    return assignmentClass?.color || "#E5DEFF";
   };
 
   const dayAssignments = selectedDay ? getAssignmentsForDay(selectedDay) : [];
@@ -132,16 +127,21 @@ export const CalendarView = () => {
                   {format(day, "d")}
                 </div>
                 <div className="space-y-1">
-                  {dayAssignments.slice(0, 3).map(assignment => (
-                    <div
-                      key={assignment.id}
-                      className={`truncate rounded px-1.5 py-0.5 text-xs font-medium ${getClassColor(
-                        assignment.classId
-                      )}`}
-                    >
-                      {assignment.title}
-                    </div>
-                  ))}
+                  {dayAssignments.slice(0, 3).map(assignment => {
+                    const bgColor = getClassColor(assignment.classId);
+                    return (
+                      <div
+                        key={assignment.id}
+                        className="truncate rounded px-1.5 py-0.5 text-xs font-medium"
+                        style={{
+                          backgroundColor: bgColor,
+                          color: getContrastColor(bgColor)
+                        }}
+                      >
+                        {assignment.title}
+                      </div>
+                    );
+                  })}
                   {dayAssignments.length > 3 && (
                     <div className="text-xs text-muted-foreground">
                       +{dayAssignments.length - 3} more
@@ -183,11 +183,13 @@ export const CalendarView = () => {
                       </p>
                     </div>
                     <span
-                      className={`rounded-md px-2 py-1 text-xs font-medium ${getClassColor(
-                        assignment.classId
-                      )}`}
+                      className="rounded-md px-2 py-1 text-xs font-medium"
+                      style={{
+                        backgroundColor: getClassColor(assignment.classId),
+                        color: getContrastColor(getClassColor(assignment.classId))
+                      }}
                     >
-                      {assignment.type}
+                      {assignment.className}
                     </span>
                   </div>
                   <div>

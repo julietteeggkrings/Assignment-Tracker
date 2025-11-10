@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Calendar, User } from "lucide-react";
 import { ExportDropdown } from "@/components/ExportDropdown";
 import { exportClassesToCSV, exportClassesToExcel, copyToClipboard } from "@/lib/exportUtils";
+import { getContrastColor } from "@/lib/colorUtils";
 import { toast } from "@/hooks/use-toast";
 
 export const MyClassesView = () => {
@@ -29,16 +30,6 @@ export const MyClassesView = () => {
     ).length;
     const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
     return { total, completed, percentage };
-  };
-
-  const getColorClass = (color: string) => {
-    const colorMap: Record<string, string> = {
-      "pastel-pink": "bg-pastel-pink",
-      "pastel-peach": "bg-pastel-peach",
-      "pastel-lavender": "bg-pastel-lavender",
-      "pastel-mint": "bg-pastel-mint",
-    };
-    return colorMap[color] || "bg-pastel-lavender";
   };
 
   const handleExportCSV = () => {
@@ -107,16 +98,27 @@ export const MyClassesView = () => {
       <div className="grid gap-6 md:grid-cols-2">
         {classes.map(classData => {
           const stats = getClassStats(classData.id);
+          const classColor = classData.color || "#E5DEFF";
+          
           return (
             <Card
               key={classData.id}
               className="overflow-hidden shadow-md transition-all hover:shadow-lg"
             >
-              <CardHeader className={`${getColorClass(classData.color)} p-4`}>
-                <h3 className="text-xl font-bold text-foreground">
+              <CardHeader 
+                className="p-4"
+                style={{ backgroundColor: classColor }}
+              >
+                <h3 
+                  className="text-xl font-bold"
+                  style={{ color: getContrastColor(classColor) }}
+                >
                   {classData.courseCode}
                 </h3>
-                <p className="text-sm font-medium text-foreground/80">
+                <p 
+                  className="text-sm font-medium opacity-80"
+                  style={{ color: getContrastColor(classColor) }}
+                >
                   {classData.courseTitle}
                 </p>
               </CardHeader>
@@ -136,9 +138,21 @@ export const MyClassesView = () => {
                       {stats.completed} / {stats.total}
                     </span>
                   </div>
-                  <Progress value={stats.percentage} className="h-2" />
+                  <div className="relative">
+                    <Progress value={stats.percentage} className="h-2 bg-muted" />
+                    <div 
+                      className="absolute top-0 left-0 h-2 rounded-full transition-all"
+                      style={{ 
+                        backgroundColor: classColor,
+                        width: `${stats.percentage}%` 
+                      }}
+                    />
+                  </div>
                   <div className="text-right">
-                    <span className="text-2xl font-bold text-gray-700 dark:text-gray-300">
+                    <span 
+                      className="text-2xl font-bold"
+                      style={{ color: classColor }}
+                    >
                       {stats.percentage}%
                     </span>
                   </div>
