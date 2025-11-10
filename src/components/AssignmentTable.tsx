@@ -14,6 +14,16 @@ interface AssignmentTableProps {
 }
 
 export const AssignmentTable = ({ assignments, classes, onUpdateStatus, onToggleToDoStatus, onDelete }: AssignmentTableProps) => {
+  const getColorClass = (color: string): string => {
+    const colorMap: Record<string, string> = {
+      "pastel-pink": "bg-pastel-pink",
+      "pastel-peach": "bg-pastel-peach",
+      "pastel-lavender": "bg-pastel-lavender",
+      "pastel-mint": "bg-pastel-mint",
+    };
+    return colorMap[color] || "bg-card";
+  };
+
   return (
     <div className="overflow-x-auto rounded-lg border border-border shadow-sm">
       <table className="w-full border-collapse bg-card">
@@ -38,13 +48,12 @@ export const AssignmentTable = ({ assignments, classes, onUpdateStatus, onToggle
             
             // Find the class color for this assignment
             const assignmentClass = classes.find(c => c.courseCode === assignment.classId);
-            const rowColor = assignmentClass?.color || '#FFFFFF';
+            const rowColorClass = getColorClass(assignmentClass?.color || "pastel-lavender");
             
             return (
               <tr 
                 key={assignment.id} 
-                style={{ backgroundColor: rowColor }}
-                className={`border-b border-black transition-colors hover:brightness-95 ${
+                className={`border-b border-black transition-colors hover:brightness-95 ${rowColorClass} ${
                   isCompletedOrSubmitted ? "line-through opacity-70" : ""
                 }`}
               >
