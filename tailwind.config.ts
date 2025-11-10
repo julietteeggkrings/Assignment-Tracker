@@ -57,6 +57,20 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        pastel: {
+          pink: "hsl(var(--pastel-pink))",
+          peach: "hsl(var(--pastel-peach))",
+          lavender: "hsl(var(--pastel-lavender))",
+          mint: "hsl(var(--pastel-mint))",
+          cream: "hsl(var(--pastel-cream))",
+        },
+        status: {
+          submitted: "hsl(var(--status-submitted))",
+          "in-progress": "hsl(var(--status-in-progress))",
+          overdue: "hsl(var(--status-overdue))",
+          completed: "hsl(var(--status-completed))",
+          "not-started": "hsl(var(--status-not-started))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
