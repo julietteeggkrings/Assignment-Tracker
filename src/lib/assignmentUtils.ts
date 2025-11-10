@@ -18,7 +18,7 @@ export function formatDate(dueDate: string): string {
 
 export function getStatusColor(status: AssignmentStatus): string {
   const statusColorMap: Record<AssignmentStatus, string> = {
-    "Not Started": "bg-status-not-started text-foreground",
+    "Not Started": "bg-red-500 text-white",
     "In Progress": "bg-status-in-progress text-white",
     "Submitted": "bg-status-submitted text-white",
     "Completed": "bg-status-completed text-white",
