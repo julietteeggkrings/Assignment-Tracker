@@ -24,7 +24,7 @@ export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleToDoStatu
             <th className="sticky top-0 px-4 py-3 text-left text-sm font-semibold text-foreground">Class</th>
             <th className="sticky top-0 px-4 py-3 text-left text-sm font-semibold text-foreground">Type</th>
             <th className="sticky top-0 px-4 py-3 text-left text-sm font-semibold text-foreground">Title</th>
-            <th className="sticky top-0 px-4 py-3 text-center text-sm font-semibold text-foreground">Days Until</th>
+            <th className="sticky top-0 px-4 py-3 text-center text-sm font-semibold text-foreground">Days Until Due</th>
             <th className="sticky top-0 px-4 py-3 text-center text-sm font-semibold text-foreground">📌 To-Do</th>
             <th className="sticky top-0 px-4 py-3 text-center text-sm font-semibold text-foreground w-[60px]"></th>
           </tr>
