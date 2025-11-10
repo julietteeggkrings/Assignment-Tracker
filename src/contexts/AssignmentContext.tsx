@@ -142,9 +142,15 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const addAssignment = async (newAssignment: Omit<Assignment, "id">) => {
-    if (!user) return;
+    if (!user) {
+      console.error('Cannot add assignment: No user logged in');
+      toast({ title: "Error", description: "Please sign in to add assignments", variant: "destructive" });
+      return;
+    }
 
-    const { error } = await supabase.from('assignments').insert({
+    console.log('Adding assignment for user:', user.id, newAssignment);
+
+    const { data, error } = await supabase.from('assignments').insert({
       user_id: user.id,
       class_id: newAssignment.classId,
       class_name: newAssignment.className,
@@ -165,6 +171,8 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
     if (error) {
       console.error('Error adding assignment:', error);
       toast({ title: "Error", description: "Failed to add assignment", variant: "destructive" });
+    } else {
+      console.log('Assignment added successfully:', data);
     }
   };
 
