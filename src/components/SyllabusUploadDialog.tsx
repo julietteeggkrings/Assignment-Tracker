@@ -16,6 +16,8 @@ import { Upload, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Assignment } from "@/types/assignment";
 import { SyllabusPreviewTable } from "./SyllabusPreviewTable";
+import { useAuth } from "@/contexts/AuthContext";
+import { AuthDialog } from "@/components/AuthDialog";
 
 interface CourseInfo {
   courseCode: string;
@@ -52,6 +54,8 @@ export const SyllabusUploadDialog = ({ onAssignmentsExtracted }: SyllabusUploadD
   const [parsedAssignments, setParsedAssignments] = useState<ParsedAssignment[]>([]);
   const [showPreview, setShowPreview] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
 
   const resetForm = () => {
     setCourseInfo({
@@ -66,6 +70,18 @@ export const SyllabusUploadDialog = ({ onAssignmentsExtracted }: SyllabusUploadD
     setShowPreview(false);
   };
 
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (nextOpen && !user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to add assignments to your masterlist.",
+        variant: "destructive",
+      });
+      setAuthDialogOpen(true);
+      return;
+    }
+    setOpen(nextOpen);
+  };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
@@ -224,8 +240,13 @@ export const SyllabusUploadDialog = ({ onAssignmentsExtracted }: SyllabusUploadD
     }
   };
 
-  const handleConfirmAssignments = (assignments: Omit<Assignment, "id">[]) => {
-    onAssignmentsExtracted(assignments, courseInfo);
+  const handleConfirmAssignments = async (assignments: Omit<Assignment, "id">[]) => {
+    if (!user) {
+      toast({ title: "Sign in required", description: "Please sign in to add assignments.", variant: "destructive" });
+      setAuthDialogOpen(true);
+      return;
+    }
+    await onAssignmentsExtracted(assignments, courseInfo);
     setOpen(false);
     resetForm();
     toast({
@@ -235,162 +256,165 @@ export const SyllabusUploadDialog = ({ onAssignmentsExtracted }: SyllabusUploadD
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-accent text-accent-foreground hover:bg-accent/80">
-          <Upload className="mr-2 h-4 w-4" />
-          Upload Syllabus
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Upload Syllabus</DialogTitle>
-          <DialogDescription>
-            Upload a PDF/Word file or paste syllabus text to automatically extract assignments
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={handleOpenChange}>
+        <DialogTrigger asChild>
+          <Button className="bg-accent text-accent-foreground hover:bg-accent/80">
+            <Upload className="mr-2 h-4 w-4" />
+            Upload Syllabus
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Upload Syllabus</DialogTitle>
+            <DialogDescription>
+              Upload a PDF/Word file or paste syllabus text to automatically extract assignments
+            </DialogDescription>
+          </DialogHeader>
 
-        {!showPreview ? (
-          <div className="space-y-6">
-            {/* Course Information */}
-            <div className="space-y-4 rounded-lg border border-border bg-muted/30 p-4">
-              <h3 className="font-semibold">Course Details</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="courseCode">Course Code</Label>
-                  <Input
-                    id="courseCode"
-                    placeholder="e.g., CSE 262"
-                    value={courseInfo.courseCode}
-                    onChange={(e) =>
-                      setCourseInfo({ ...courseInfo, courseCode: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="courseTitle">Course Title</Label>
-                  <Input
-                    id="courseTitle"
-                    placeholder="e.g., Programming Languages"
-                    value={courseInfo.courseTitle}
-                    onChange={(e) =>
-                      setCourseInfo({ ...courseInfo, courseTitle: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="instructor">Professor</Label>
-                  <Input
-                    id="instructor"
-                    placeholder="e.g., Dr. Smith"
-                    value={courseInfo.instructor}
-                    onChange={(e) =>
-                      setCourseInfo({ ...courseInfo, instructor: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="schedule">Schedule (Optional)</Label>
-                  <Input
-                    id="schedule"
-                    placeholder="e.g., Mon/Wed 10:00 AM"
-                    value={courseInfo.schedule}
-                    onChange={(e) =>
-                      setCourseInfo({ ...courseInfo, schedule: e.target.value })
-                    }
-                  />
+          {!showPreview ? (
+            <div className="space-y-6">
+              {/* Course Information */}
+              <div className="space-y-4 rounded-lg border border-border bg-muted/30 p-4">
+                <h3 className="font-semibold">Course Details</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="courseCode">Course Code</Label>
+                    <Input
+                      id="courseCode"
+                      placeholder="e.g., CSE 262"
+                      value={courseInfo.courseCode}
+                      onChange={(e) =>
+                        setCourseInfo({ ...courseInfo, courseCode: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="courseTitle">Course Title</Label>
+                    <Input
+                      id="courseTitle"
+                      placeholder="e.g., Programming Languages"
+                      value={courseInfo.courseTitle}
+                      onChange={(e) =>
+                        setCourseInfo({ ...courseInfo, courseTitle: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="instructor">Professor</Label>
+                    <Input
+                      id="instructor"
+                      placeholder="e.g., Dr. Smith"
+                      value={courseInfo.instructor}
+                      onChange={(e) =>
+                        setCourseInfo({ ...courseInfo, instructor: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="schedule">Schedule (Optional)</Label>
+                    <Input
+                      id="schedule"
+                      placeholder="e.g., Mon/Wed 10:00 AM"
+                      value={courseInfo.schedule}
+                      onChange={(e) =>
+                        setCourseInfo({ ...courseInfo, schedule: e.target.value })
+                      }
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Upload Method */}
-            <Tabs value={uploadMethod} onValueChange={(v) => setUploadMethod(v as "file" | "text")}>
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="file">Upload File</TabsTrigger>
-                <TabsTrigger value="text">Paste Text</TabsTrigger>
-              </TabsList>
+              {/* Upload Method */}
+              <Tabs value={uploadMethod} onValueChange={(v) => setUploadMethod(v as "file" | "text")}>
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="file">Upload File</TabsTrigger>
+                  <TabsTrigger value="text">Paste Text</TabsTrigger>
+                </TabsList>
 
-              <TabsContent value="file" className="space-y-4">
-                <div className="flex items-center justify-center w-full">
-                  <label
-                    htmlFor="file-upload"
-                    className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-accent rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
-                  >
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <Upload className="w-10 h-10 mb-3 text-accent" />
-                      <p className="mb-2 text-sm text-muted-foreground">
-                        <span className="font-semibold">Click to upload</span> or drag and drop
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        PDF, DOCX, DOC, or TXT (max 10MB)
-                      </p>
-                    </div>
-                    <input
-                      id="file-upload"
-                      type="file"
-                      className="hidden"
-                      accept=".pdf,.docx,.doc,.txt"
-                      onChange={handleFileChange}
-                    />
-                  </label>
-                </div>
-                {file && (
-                  <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                    <span className="text-sm">{file.name}</span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setFile(null)}
+                <TabsContent value="file" className="space-y-4">
+                  <div className="flex items-center justify-center w-full">
+                    <label
+                      htmlFor="file-upload"
+                      className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-accent rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
                     >
-                      Remove
-                    </Button>
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <Upload className="w-10 h-10 mb-3 text-accent" />
+                        <p className="mb-2 text-sm text-muted-foreground">
+                          <span className="font-semibold">Click to upload</span> or drag and drop
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          PDF, DOCX, DOC, or TXT (max 10MB)
+                        </p>
+                      </div>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        className="hidden"
+                        accept=".pdf,.docx,.doc,.txt"
+                        onChange={handleFileChange}
+                      />
+                    </label>
                   </div>
+                  {file && (
+                    <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                      <span className="text-sm">{file.name}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setFile(null)}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="text" className="space-y-4">
+                  <Textarea
+                    placeholder="Paste your syllabus text here..."
+                    className="min-h-[300px] font-mono text-sm"
+                    value={pastedText}
+                    onChange={(e) => setPastedText(e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground text-right">
+                    {pastedText.length} characters
+                  </p>
+                </TabsContent>
+              </Tabs>
+
+              <Button
+                className="w-full"
+                onClick={handleParse}
+                disabled={
+                  isParsing ||
+                  !courseInfo.courseCode ||
+                  !courseInfo.courseTitle ||
+                  (uploadMethod === "file" && !file) ||
+                  (uploadMethod === "text" && !pastedText.trim())
+                }
+              >
+                {isParsing ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Parsing syllabus...
+                  </>
+                ) : (
+                  "Parse Syllabus"
                 )}
-              </TabsContent>
-
-              <TabsContent value="text" className="space-y-4">
-                <Textarea
-                  placeholder="Paste your syllabus text here..."
-                  className="min-h-[300px] font-mono text-sm"
-                  value={pastedText}
-                  onChange={(e) => setPastedText(e.target.value)}
-                />
-                <p className="text-xs text-muted-foreground text-right">
-                  {pastedText.length} characters
-                </p>
-              </TabsContent>
-            </Tabs>
-
-            <Button
-              className="w-full"
-              onClick={handleParse}
-              disabled={
-                isParsing ||
-                !courseInfo.courseCode ||
-                !courseInfo.courseTitle ||
-                (uploadMethod === "file" && !file) ||
-                (uploadMethod === "text" && !pastedText.trim())
-              }
-            >
-              {isParsing ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Parsing syllabus...
-                </>
-              ) : (
-                "Parse Syllabus"
-              )}
-            </Button>
-          </div>
-        ) : (
-          <SyllabusPreviewTable
-            assignments={parsedAssignments}
-            courseInfo={courseInfo}
-            onConfirm={handleConfirmAssignments}
-            onBack={() => setShowPreview(false)}
-          />
-        )}
-      </DialogContent>
-    </Dialog>
+              </Button>
+            </div>
+          ) : (
+            <SyllabusPreviewTable
+              assignments={parsedAssignments}
+              courseInfo={courseInfo}
+              onConfirm={handleConfirmAssignments}
+              onBack={() => setShowPreview(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+      <AuthDialog open={authDialogOpen} onOpenChange={setAuthDialogOpen} />
+    </>
   );
 };

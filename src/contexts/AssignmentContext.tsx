@@ -173,6 +173,8 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
       toast({ title: "Error", description: "Failed to add assignment", variant: "destructive" });
     } else {
       console.log('Assignment added successfully:', data);
+      // Refresh list to ensure UI updates even if realtime misses events
+      loadAssignments();
     }
   };
 
