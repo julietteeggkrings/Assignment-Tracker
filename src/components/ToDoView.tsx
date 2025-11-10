@@ -12,7 +12,17 @@ import { exportToDoToCSV, exportToDoToExcel, copyToClipboard } from "@/lib/expor
 import { toast } from "@/hooks/use-toast";
 
 export const ToDoView = () => {
-  const { assignments, toggleToDoComplete, updateToDoPriority, toggleToDoStatus } = useAssignments();
+  const { assignments, classes, toggleToDoComplete, updateToDoPriority, toggleToDoStatus } = useAssignments();
+
+  const getColorClass = (color: string): string => {
+    const colorMap: Record<string, string> = {
+      "pastel-pink": "bg-pastel-pink",
+      "pastel-peach": "bg-pastel-peach",
+      "pastel-lavender": "bg-pastel-lavender",
+      "pastel-mint": "bg-pastel-mint",
+    };
+    return colorMap[color] || "bg-pastel-lavender";
+  };
 
   // Only show assignments that are added to To-Do list
   const toDoTasks = assignments
@@ -102,7 +112,11 @@ export const ToDoView = () => {
             </tr>
           </thead>
           <tbody>
-            {toDoTasks.map(task => (
+            {toDoTasks.map(task => {
+              const taskClass = classes.find(c => c.courseCode === task.classId);
+              const classColorClass = getColorClass(taskClass?.color || "pastel-lavender");
+              
+              return (
               <tr
                 key={task.id}
                 className={`border-b border-border transition-colors hover:bg-muted/30 ${
@@ -141,7 +155,7 @@ export const ToDoView = () => {
                 </td>
                 <td className="px-4 py-3">
                   <span
-                    className={`inline-block rounded-md bg-pastel-lavender px-2 py-1 text-xs font-medium ${
+                    className={`inline-block rounded-md px-2 py-1 text-xs font-medium ${classColorClass} ${
                       task.toDoCompleted ? "line-through" : ""
                     }`}
                   >
@@ -162,7 +176,8 @@ export const ToDoView = () => {
                   </Button>
                 </td>
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
       </div>

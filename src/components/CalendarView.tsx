@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export const CalendarView = () => {
-  const { assignments, updateStatus } = useAssignments();
+  const { assignments, classes, updateStatus } = useAssignments();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
 
@@ -46,18 +46,15 @@ export const CalendarView = () => {
     );
   };
 
-  const getTypeColor = (type: AssignmentType): string => {
-    const colorMap: Record<AssignmentType, string> = {
-      Homework: "bg-pastel-pink text-foreground",
-      Quiz: "bg-pastel-peach text-foreground",
-      Project: "bg-pastel-lavender text-foreground",
-      Exam: "bg-status-overdue text-white",
-      Reading: "bg-pastel-mint text-foreground",
-      Coding: "bg-primary/70 text-white",
-      Recitation: "bg-accent text-foreground",
-      Other: "bg-muted text-foreground",
+  const getClassColor = (classId: string): string => {
+    const assignmentClass = classes.find(c => c.courseCode === classId);
+    const colorMap: Record<string, string> = {
+      "pastel-pink": "bg-pastel-pink text-foreground",
+      "pastel-peach": "bg-pastel-peach text-foreground",
+      "pastel-lavender": "bg-pastel-lavender text-foreground",
+      "pastel-mint": "bg-pastel-mint text-foreground",
     };
-    return colorMap[type] || "bg-muted text-foreground";
+    return colorMap[assignmentClass?.color || "pastel-lavender"] || "bg-pastel-lavender text-foreground";
   };
 
   const dayAssignments = selectedDay ? getAssignmentsForDay(selectedDay) : [];
@@ -138,8 +135,8 @@ export const CalendarView = () => {
                   {dayAssignments.slice(0, 3).map(assignment => (
                     <div
                       key={assignment.id}
-                      className={`truncate rounded px-1.5 py-0.5 text-xs font-medium ${getTypeColor(
-                        assignment.type
+                      className={`truncate rounded px-1.5 py-0.5 text-xs font-medium ${getClassColor(
+                        assignment.classId
                       )}`}
                     >
                       {assignment.title}
@@ -186,8 +183,8 @@ export const CalendarView = () => {
                       </p>
                     </div>
                     <span
-                      className={`rounded-md px-2 py-1 text-xs font-medium ${getTypeColor(
-                        assignment.type
+                      className={`rounded-md px-2 py-1 text-xs font-medium ${getClassColor(
+                        assignment.classId
                       )}`}
                     >
                       {assignment.type}

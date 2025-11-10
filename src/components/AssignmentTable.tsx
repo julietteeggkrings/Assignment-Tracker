@@ -75,7 +75,7 @@ export const AssignmentTable = ({ assignments, classes, onUpdateStatus, onToggle
                 <td className="px-4 py-3 text-sm">{getDayOfWeek(assignment.dueDate)}</td>
                 <td className="px-4 py-3 text-sm">{formatDate(assignment.dueDate)}</td>
                 <td className="px-4 py-3">
-                  <span className="inline-block rounded-md bg-background/50 px-2 py-1 text-xs font-medium border border-border/30">
+                  <span className={`inline-block rounded-md px-2 py-1 text-xs font-medium border border-border/30 ${rowColorClass}`}>
                     {assignment.className}
                   </span>
                 </td>
