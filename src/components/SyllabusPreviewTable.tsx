@@ -41,7 +41,7 @@ interface SyllabusPreviewTableProps {
     courseCode: string;
     courseTitle: string;
     instructor: string;
-    schedule: string;
+    color: string;
   };
   onConfirm: (assignments: Omit<Assignment, "id">[]) => void;
   onBack: () => void;

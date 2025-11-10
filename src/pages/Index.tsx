@@ -30,7 +30,7 @@ const MainContent = () => {
 
   const handleSyllabusAssignments = (
     extractedAssignments: Omit<Assignment, "id">[],
-    courseInfo: { courseCode: string; courseTitle: string; instructor: string; schedule: string }
+    courseInfo: { courseCode: string; courseTitle: string; instructor: string; color: string }
   ) => {
     // Add or update the class
     const existingClass = classes.find(c => c.courseCode === courseInfo.courseCode);
@@ -39,8 +39,8 @@ const MainContent = () => {
         courseCode: courseInfo.courseCode,
         courseTitle: courseInfo.courseTitle,
         instructor: courseInfo.instructor,
-        schedule: courseInfo.schedule,
-        color: "#FFD7E5", // Default pastel pink
+        schedule: "", // Empty schedule since we removed it
+        color: courseInfo.color,
       });
     }
 

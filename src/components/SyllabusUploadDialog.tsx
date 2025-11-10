@@ -23,7 +23,7 @@ interface CourseInfo {
   courseCode: string;
   courseTitle: string;
   instructor: string;
-  schedule: string;
+  color: string;
 }
 
 interface ParsedAssignment {
@@ -45,7 +45,7 @@ export const SyllabusUploadDialog = ({ onAssignmentsExtracted }: SyllabusUploadD
     courseCode: "",
     courseTitle: "",
     instructor: "",
-    schedule: "",
+    color: "#E5DEFF", // Default lavender
   });
   const [uploadMethod, setUploadMethod] = useState<"file" | "text">("file");
   const [file, setFile] = useState<File | null>(null);
@@ -62,7 +62,7 @@ export const SyllabusUploadDialog = ({ onAssignmentsExtracted }: SyllabusUploadD
       courseCode: "",
       courseTitle: "",
       instructor: "",
-      schedule: "",
+      color: "#E5DEFF",
     });
     setFile(null);
     setPastedText("");
@@ -259,10 +259,10 @@ export const SyllabusUploadDialog = ({ onAssignmentsExtracted }: SyllabusUploadD
     <>
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
-          <Button className="bg-accent text-accent-foreground hover:bg-accent/80">
-            <Upload className="mr-2 h-4 w-4" />
-            Upload Syllabus
-          </Button>
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Upload className="mr-2 h-4 w-4" />
+          Upload Syllabus
+        </Button>
         </DialogTrigger>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -300,28 +300,34 @@ export const SyllabusUploadDialog = ({ onAssignmentsExtracted }: SyllabusUploadD
                       }
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="instructor">Professor</Label>
-                    <Input
-                      id="instructor"
-                      placeholder="e.g., Dr. Smith"
-                      value={courseInfo.instructor}
+                <div className="space-y-2">
+                  <Label htmlFor="instructor">Professor</Label>
+                  <Input
+                    id="instructor"
+                    placeholder="e.g., Dr. Smith"
+                    value={courseInfo.instructor}
+                    onChange={(e) =>
+                      setCourseInfo({ ...courseInfo, instructor: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="color">Class Color (Optional)</Label>
+                  <div className="flex gap-2 items-center">
+                    <input
+                      id="color"
+                      type="color"
+                      value={courseInfo.color}
                       onChange={(e) =>
-                        setCourseInfo({ ...courseInfo, instructor: e.target.value })
+                        setCourseInfo({ ...courseInfo, color: e.target.value })
                       }
+                      className="h-10 w-20 rounded cursor-pointer border border-border"
                     />
+                    <span className="text-sm text-muted-foreground">
+                      Pick a color for this class
+                    </span>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="schedule">Schedule (Optional)</Label>
-                    <Input
-                      id="schedule"
-                      placeholder="e.g., Mon/Wed 10:00 AM"
-                      value={courseInfo.schedule}
-                      onChange={(e) =>
-                        setCourseInfo({ ...courseInfo, schedule: e.target.value })
-                      }
-                    />
-                  </div>
+                </div>
                 </div>
               </div>
 
@@ -383,17 +389,17 @@ export const SyllabusUploadDialog = ({ onAssignmentsExtracted }: SyllabusUploadD
                 </TabsContent>
               </Tabs>
 
-              <Button
-                className="w-full"
-                onClick={handleParse}
-                disabled={
-                  isParsing ||
-                  !courseInfo.courseCode ||
-                  !courseInfo.courseTitle ||
-                  (uploadMethod === "file" && !file) ||
-                  (uploadMethod === "text" && !pastedText.trim())
-                }
-              >
+            <Button
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              onClick={handleParse}
+              disabled={
+                isParsing ||
+                !courseInfo.courseCode ||
+                !courseInfo.courseTitle ||
+                (uploadMethod === "file" && !file) ||
+                (uploadMethod === "text" && !pastedText.trim())
+              }
+            >
                 {isParsing ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
