@@ -70,8 +70,8 @@ const MainContent = () => {
     toast({ title: "Success", description: `Exported ${sortedAssignments.length} assignments to CSV` });
   };
 
-  const handleExportMasterlistExcel = () => {
-    exportMasterlistToExcel(sortedAssignments);
+  const handleExportMasterlistExcel = async () => {
+    await exportMasterlistToExcel(sortedAssignments);
     toast({ title: "Success", description: `Exported ${sortedAssignments.length} assignments to Excel` });
   };
 

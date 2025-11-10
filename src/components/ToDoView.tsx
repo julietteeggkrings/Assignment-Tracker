@@ -42,8 +42,8 @@ export const ToDoView = () => {
     toast({ title: "Success", description: `Exported ${toDoTasks.length} tasks to CSV` });
   };
 
-  const handleExportExcel = () => {
-    exportToDoToExcel(toDoTasks);
+  const handleExportExcel = async () => {
+    await exportToDoToExcel(toDoTasks);
     toast({ title: "Success", description: `Exported ${toDoTasks.length} tasks to Excel` });
   };
 

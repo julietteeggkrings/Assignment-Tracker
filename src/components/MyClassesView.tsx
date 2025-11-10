@@ -41,8 +41,8 @@ export const MyClassesView = () => {
     toast({ title: "Success", description: `Exported ${classes.length} classes to CSV` });
   };
 
-  const handleExportExcel = () => {
-    exportClassesToExcel(classes, assignments);
+  const handleExportExcel = async () => {
+    await exportClassesToExcel(classes, assignments);
     toast({ title: "Success", description: `Exported ${classes.length} classes to Excel` });
   };
 
