@@ -68,11 +68,11 @@ export const MyClassesView = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">Total Assignments</p>
-              <p className="mt-1 text-3xl font-bold text-foreground">{totalAssignments}</p>
+              <p className="mt-1 text-3xl font-bold text-black dark:text-white">{totalAssignments}</p>
             </div>
             <div>
               <p className="text-sm font-medium text-muted-foreground">Completed</p>
-              <p className="mt-1 text-3xl font-bold text-status-completed">
+              <p className="mt-1 text-3xl font-bold text-black dark:text-white">
                 {completedAssignments}
               </p>
             </div>
@@ -80,7 +80,7 @@ export const MyClassesView = () => {
               <p className="text-sm font-medium text-muted-foreground">Overall Progress</p>
               <div className="mt-2 space-y-2">
                 <Progress value={overallProgress} className="h-2" />
-                <p className="text-2xl font-bold text-primary">{overallProgress}%</p>
+                <p className="text-2xl font-bold text-gray-700 dark:text-gray-300">{overallProgress}%</p>
               </div>
             </div>
           </div>
@@ -96,7 +96,7 @@ export const MyClassesView = () => {
             onExportExcel={handleExportExcel}
             onCopyClipboard={handleCopyClipboard}
           />
-          <Button className="gap-2 bg-primary hover:bg-primary/90">
+          <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
             <Plus className="h-4 w-4" />
             Add Class
           </Button>
@@ -138,7 +138,7 @@ export const MyClassesView = () => {
                   </div>
                   <Progress value={stats.percentage} className="h-2" />
                   <div className="text-right">
-                    <span className="text-2xl font-bold text-primary">
+                    <span className="text-2xl font-bold text-gray-700 dark:text-gray-300">
                       {stats.percentage}%
                     </span>
                   </div>

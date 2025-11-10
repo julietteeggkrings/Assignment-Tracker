@@ -66,7 +66,7 @@ export const CalendarView = () => {
     <div className="space-y-6">
       {/* Month Navigation */}
       <div className="flex items-center justify-between">
-        <h2 className="text-4xl font-bold text-primary">
+        <h2 className="text-4xl font-bold text-foreground">
           {format(currentDate, "MMMM yyyy")}
         </h2>
         <div className="flex gap-2">
