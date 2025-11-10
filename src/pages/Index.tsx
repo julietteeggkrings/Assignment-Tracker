@@ -147,6 +147,7 @@ const MainContent = () => {
               </h2>
               <AssignmentTable
                 assignments={sortedAssignments}
+                classes={classes}
                 onUpdateStatus={updateStatus}
                 onToggleToDoStatus={toggleToDoStatus}
                 onDelete={deleteAssignment}

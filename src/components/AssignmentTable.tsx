@@ -1,4 +1,4 @@
-import { Assignment, AssignmentStatus, AssignmentType } from "@/types/assignment";
+import { Assignment, AssignmentStatus, AssignmentType, Class } from "@/types/assignment";
 import { calculateDaysUntilDue, getDayOfWeek, formatDate, getStatusColor, getUrgencyColor } from "@/lib/assignmentUtils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -7,12 +7,13 @@ import { Button } from "@/components/ui/button";
 
 interface AssignmentTableProps {
   assignments: Assignment[];
+  classes: Class[];
   onUpdateStatus: (id: string, status: AssignmentStatus) => void;
   onToggleToDoStatus: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
-export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleToDoStatus, onDelete }: AssignmentTableProps) => {
+export const AssignmentTable = ({ assignments, classes, onUpdateStatus, onToggleToDoStatus, onDelete }: AssignmentTableProps) => {
   return (
     <div className="overflow-x-auto rounded-lg border border-border shadow-sm">
       <table className="w-full border-collapse bg-card">
@@ -33,13 +34,17 @@ export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleToDoStatu
           {assignments.map((assignment) => {
             const daysUntil = calculateDaysUntilDue(assignment.dueDate);
             const urgencyClass = getUrgencyColor(daysUntil, assignment.status);
-            
             const isCompletedOrSubmitted = assignment.status === "Completed";
+            
+            // Find the class color for this assignment
+            const assignmentClass = classes.find(c => c.courseCode === assignment.classId);
+            const rowColor = assignmentClass?.color || '#FFFFFF';
             
             return (
               <tr 
                 key={assignment.id} 
-                className={`border-b border-border transition-colors hover:bg-muted/30 ${
+                style={{ backgroundColor: rowColor }}
+                className={`border-b border-border transition-colors hover:brightness-95 ${
                   isCompletedOrSubmitted ? "line-through opacity-70" : ""
                 }`}
               >
@@ -61,7 +66,7 @@ export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleToDoStatu
                 <td className="px-4 py-3 text-sm">{getDayOfWeek(assignment.dueDate)}</td>
                 <td className="px-4 py-3 text-sm">{formatDate(assignment.dueDate)}</td>
                 <td className="px-4 py-3">
-                  <span className="inline-block rounded-md bg-pastel-lavender px-2 py-1 text-xs font-medium">
+                  <span className="inline-block rounded-md bg-background/50 px-2 py-1 text-xs font-medium border border-border/30">
                     {assignment.className}
                   </span>
                 </td>
