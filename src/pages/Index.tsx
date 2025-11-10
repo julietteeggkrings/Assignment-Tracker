@@ -13,6 +13,7 @@ import { ExportDropdown } from "@/components/ExportDropdown";
 import { BookOpen, Calendar, CheckSquare, LayoutList, LogIn, LogOut } from "lucide-react";
 import { Assignment } from "@/types/assignment";
 import { exportMasterlistToCSV, exportMasterlistToExcel, copyToClipboard } from "@/lib/exportUtils";
+import { calculateDaysUntilDue } from "@/lib/assignmentUtils";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 
@@ -24,9 +25,23 @@ const MainContent = () => {
   const { user, signOut } = useAuth();
   const { assignments, updateStatus, toggleComplete, addAssignment, toggleToDoStatus, deleteAssignment, classes, addClass } = useAssignments();
 
-  const sortedAssignments = [...assignments].sort(
-    (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
-  );
+  const sortedAssignments = [...assignments].sort((a, b) => {
+    const daysA = calculateDaysUntilDue(a.dueDate);
+    const daysB = calculateDaysUntilDue(b.dueDate);
+    
+    // Both are future/today (0 or positive)
+    if (daysA >= 0 && daysB >= 0) {
+      return daysA - daysB; // Ascending: 0, 1, 2, 3...
+    }
+    
+    // Both are overdue (negative)
+    if (daysA < 0 && daysB < 0) {
+      return Math.abs(daysA) - Math.abs(daysB); // By absolute value: -1, -2, -3...
+    }
+    
+    // One is future, one is overdue - future assignments come first
+    return daysA >= 0 ? -1 : 1;
+  });
 
   const handleSyllabusAssignments = (
     extractedAssignments: Omit<Assignment, "id">[],
