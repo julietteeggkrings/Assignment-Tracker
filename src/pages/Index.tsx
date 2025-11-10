@@ -22,7 +22,7 @@ const MainContent = () => {
   const [currentView, setCurrentView] = useState<ViewType>("masterlist");
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const { user, signOut } = useAuth();
-  const { assignments, updateStatus, toggleComplete, addAssignment, toggleToDoStatus, classes, addClass } = useAssignments();
+  const { assignments, updateStatus, toggleComplete, addAssignment, toggleToDoStatus, deleteAssignment, classes, addClass } = useAssignments();
 
   const sortedAssignments = [...assignments].sort(
     (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
@@ -149,6 +149,7 @@ const MainContent = () => {
                 assignments={sortedAssignments}
                 onUpdateStatus={updateStatus}
                 onToggleToDoStatus={toggleToDoStatus}
+                onDelete={deleteAssignment}
               />
             </div>
           </div>

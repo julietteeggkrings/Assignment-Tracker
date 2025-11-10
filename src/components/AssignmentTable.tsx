@@ -2,14 +2,17 @@ import { Assignment, AssignmentStatus, AssignmentType } from "@/types/assignment
 import { calculateDaysUntilDue, getDayOfWeek, formatDate, getStatusColor, getUrgencyColor } from "@/lib/assignmentUtils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface AssignmentTableProps {
   assignments: Assignment[];
   onUpdateStatus: (id: string, status: AssignmentStatus) => void;
   onToggleToDoStatus: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
-export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleToDoStatus }: AssignmentTableProps) => {
+export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleToDoStatus, onDelete }: AssignmentTableProps) => {
   return (
     <div className="overflow-x-auto rounded-lg border border-border shadow-sm">
       <table className="w-full border-collapse bg-card">
@@ -23,6 +26,7 @@ export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleToDoStatu
             <th className="sticky top-0 px-4 py-3 text-left text-sm font-semibold text-foreground">Title</th>
             <th className="sticky top-0 px-4 py-3 text-center text-sm font-semibold text-foreground">Days Until</th>
             <th className="sticky top-0 px-4 py-3 text-center text-sm font-semibold text-foreground">📌 To-Do</th>
+            <th className="sticky top-0 px-4 py-3 text-center text-sm font-semibold text-foreground w-[60px]"></th>
           </tr>
         </thead>
         <tbody>
@@ -73,6 +77,16 @@ export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleToDoStatu
                     onCheckedChange={() => onToggleToDoStatus(assignment.id)}
                     className="mx-auto data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
+                </td>
+                <td className="px-4 py-3 text-center">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onDelete(assignment.id)}
+                    className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </td>
               </tr>
             );
