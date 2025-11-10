@@ -7,6 +7,9 @@ import { getToDoPriorityColor } from "@/lib/toDoUtils";
 import { ToDoPriority } from "@/types/assignment";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { ExportDropdown } from "@/components/ExportDropdown";
+import { exportToDoToCSV, exportToDoToExcel, copyToClipboard } from "@/lib/exportUtils";
+import { toast } from "@/hooks/use-toast";
 
 export const ToDoView = () => {
   const { assignments, toggleToDoComplete, updateToDoPriority, toggleToDoStatus } = useAssignments();
@@ -33,6 +36,21 @@ export const ToDoView = () => {
     updateToDoPriority(id, priority);
   };
 
+  const handleExportCSV = () => {
+    exportToDoToCSV(toDoTasks);
+    toast({ title: "Success", description: `Exported ${toDoTasks.length} tasks to CSV` });
+  };
+
+  const handleExportExcel = () => {
+    exportToDoToExcel(toDoTasks);
+    toast({ title: "Success", description: `Exported ${toDoTasks.length} tasks to Excel` });
+  };
+
+  const handleCopyClipboard = async () => {
+    await copyToClipboard(toDoTasks);
+    toast({ title: "Success", description: "Copied to clipboard" });
+  };
+
   return (
     <div className="space-y-6">
       {/* Header Section */}
@@ -42,11 +60,18 @@ export const ToDoView = () => {
             <h2 className="text-2xl font-bold text-foreground">To-Do List</h2>
             <p className="mt-1 text-sm text-muted-foreground">Today is: {today}</p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-4xl font-bold text-primary">{toDoCompletedCount}</span>
-            <span className="text-2xl text-muted-foreground">/</span>
-            <span className="text-4xl font-bold text-foreground">{totalToDoCount}</span>
-            <span className="ml-2 text-sm text-muted-foreground">Completed</span>
+          <div className="flex items-center gap-4">
+            <ExportDropdown
+              onExportCSV={handleExportCSV}
+              onExportExcel={handleExportExcel}
+              onCopyClipboard={handleCopyClipboard}
+            />
+            <div className="flex items-center gap-2">
+              <span className="text-4xl font-bold text-primary">{toDoCompletedCount}</span>
+              <span className="text-2xl text-muted-foreground">/</span>
+              <span className="text-4xl font-bold text-foreground">{totalToDoCount}</span>
+              <span className="ml-2 text-sm text-muted-foreground">Completed</span>
+            </div>
           </div>
         </div>
       </div>

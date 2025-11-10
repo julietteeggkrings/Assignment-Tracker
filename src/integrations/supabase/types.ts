@@ -14,7 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      assignments: {
+        Row: {
+          added_to_todo: boolean
+          class_id: string
+          class_name: string
+          completed: boolean
+          created_at: string
+          due_date: string
+          due_time: string | null
+          id: string
+          notes: string | null
+          priority: string
+          status: string
+          title: string
+          todo_completed: boolean
+          todo_priority: string
+          type: string
+          updated_at: string
+          user_id: string
+          weight: number | null
+        }
+        Insert: {
+          added_to_todo?: boolean
+          class_id: string
+          class_name: string
+          completed?: boolean
+          created_at?: string
+          due_date: string
+          due_time?: string | null
+          id?: string
+          notes?: string | null
+          priority?: string
+          status?: string
+          title: string
+          todo_completed?: boolean
+          todo_priority?: string
+          type: string
+          updated_at?: string
+          user_id: string
+          weight?: number | null
+        }
+        Update: {
+          added_to_todo?: boolean
+          class_id?: string
+          class_name?: string
+          completed?: boolean
+          created_at?: string
+          due_date?: string
+          due_time?: string | null
+          id?: string
+          notes?: string | null
+          priority?: string
+          status?: string
+          title?: string
+          todo_completed?: boolean
+          todo_priority?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+          weight?: number | null
+        }
+        Relationships: []
+      }
+      classes: {
+        Row: {
+          color: string
+          course_code: string
+          course_title: string
+          created_at: string
+          id: string
+          instructor: string
+          schedule: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string
+          course_code: string
+          course_title: string
+          created_at?: string
+          id?: string
+          instructor: string
+          schedule: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          course_code?: string
+          course_title?: string
+          created_at?: string
+          id?: string
+          instructor?: string
+          schedule?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { AssignmentProvider, useAssignments } from "@/contexts/AssignmentContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { AuthDialog } from "@/components/AuthDialog";
 import { AssignmentTable } from "@/components/AssignmentTable";
 import { AddAssignmentDialog } from "@/components/AddAssignmentDialog";
 import { SyllabusUploadDialog } from "@/components/SyllabusUploadDialog";
@@ -7,13 +9,19 @@ import { StatsBar } from "@/components/StatsBar";
 import { ToDoView } from "@/components/ToDoView";
 import { MyClassesView } from "@/components/MyClassesView";
 import { CalendarView } from "@/components/CalendarView";
-import { BookOpen, Calendar, CheckSquare, LayoutList } from "lucide-react";
+import { ExportDropdown } from "@/components/ExportDropdown";
+import { BookOpen, Calendar, CheckSquare, LayoutList, LogIn, LogOut } from "lucide-react";
 import { Assignment } from "@/types/assignment";
+import { exportMasterlistToCSV, exportMasterlistToExcel, copyToClipboard } from "@/lib/exportUtils";
+import { toast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 
 type ViewType = "masterlist" | "todo" | "classes" | "calendar";
 
 const MainContent = () => {
   const [currentView, setCurrentView] = useState<ViewType>("masterlist");
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const { user, signOut } = useAuth();
   const { assignments, updateStatus, toggleComplete, addAssignment, toggleToDoStatus, classes, addClass } = useAssignments();
 
   const sortedAssignments = [...assignments].sort(
@@ -42,6 +50,21 @@ const MainContent = () => {
     });
   };
 
+  const handleExportMasterlistCSV = () => {
+    exportMasterlistToCSV(sortedAssignments);
+    toast({ title: "Success", description: `Exported ${sortedAssignments.length} assignments to CSV` });
+  };
+
+  const handleExportMasterlistExcel = () => {
+    exportMasterlistToExcel(sortedAssignments);
+    toast({ title: "Success", description: `Exported ${sortedAssignments.length} assignments to Excel` });
+  };
+
+  const handleCopyMasterlistClipboard = async () => {
+    await copyToClipboard(sortedAssignments);
+    toast({ title: "Success", description: "Copied to clipboard" });
+  };
+
   const navItems = [
     { id: "masterlist" as ViewType, label: "Masterlist", icon: LayoutList },
     { id: "todo" as ViewType, label: "To-Do", icon: CheckSquare },
@@ -54,10 +77,25 @@ const MainContent = () => {
       {/* Header */}
       <header className="border-b border-border bg-card shadow-sm">
         <div className="mx-auto max-w-7xl px-6 py-6">
-          <h1 className="text-3xl font-bold text-foreground">Assignment Tracker</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Manage your coursework with ease
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground">Assignment Tracker</h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Manage your coursework with ease
+              </p>
+            </div>
+            {user ? (
+              <Button variant="outline" onClick={signOut} className="gap-2">
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </Button>
+            ) : (
+              <Button onClick={() => setAuthDialogOpen(true)} className="gap-2">
+                <LogIn className="h-4 w-4" />
+                Sign In
+              </Button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -94,6 +132,11 @@ const MainContent = () => {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <StatsBar assignments={assignments} />
               <div className="flex gap-3">
+                <ExportDropdown
+                  onExportCSV={handleExportMasterlistCSV}
+                  onExportExcel={handleExportMasterlistExcel}
+                  onCopyClipboard={handleCopyMasterlistClipboard}
+                />
                 <SyllabusUploadDialog onAssignmentsExtracted={handleSyllabusAssignments} />
                 <AddAssignmentDialog onAdd={addAssignment} />
               </div>
@@ -116,6 +159,7 @@ const MainContent = () => {
         {currentView === "classes" && <MyClassesView />}
         {currentView === "calendar" && <CalendarView />}
       </main>
+      <AuthDialog open={authDialogOpen} onOpenChange={setAuthDialogOpen} />
     </div>
   );
 };

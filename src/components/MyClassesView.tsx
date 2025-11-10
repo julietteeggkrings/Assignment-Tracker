@@ -4,6 +4,9 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Plus, Calendar, User } from "lucide-react";
+import { ExportDropdown } from "@/components/ExportDropdown";
+import { exportClassesToCSV, exportClassesToExcel, copyToClipboard } from "@/lib/exportUtils";
+import { toast } from "@/hooks/use-toast";
 
 export const MyClassesView = () => {
   const { assignments, classes } = useAssignments();
@@ -36,6 +39,21 @@ export const MyClassesView = () => {
       "pastel-mint": "bg-pastel-mint",
     };
     return colorMap[color] || "bg-pastel-lavender";
+  };
+
+  const handleExportCSV = () => {
+    exportClassesToCSV(classes, assignments);
+    toast({ title: "Success", description: `Exported ${classes.length} classes to CSV` });
+  };
+
+  const handleExportExcel = () => {
+    exportClassesToExcel(classes, assignments);
+    toast({ title: "Success", description: `Exported ${classes.length} classes to Excel` });
+  };
+
+  const handleCopyClipboard = async () => {
+    await copyToClipboard(assignments);
+    toast({ title: "Success", description: "Copied to clipboard" });
   };
 
   return (
@@ -72,10 +90,17 @@ export const MyClassesView = () => {
       {/* Action Bar */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-foreground">My Classes</h2>
-        <Button className="gap-2 bg-primary hover:bg-primary/90">
-          <Plus className="h-4 w-4" />
-          Add Class
-        </Button>
+        <div className="flex gap-2">
+          <ExportDropdown
+            onExportCSV={handleExportCSV}
+            onExportExcel={handleExportExcel}
+            onCopyClipboard={handleCopyClipboard}
+          />
+          <Button className="gap-2 bg-primary hover:bg-primary/90">
+            <Plus className="h-4 w-4" />
+            Add Class
+          </Button>
+        </div>
       </div>
 
       {/* Class Cards Grid */}
