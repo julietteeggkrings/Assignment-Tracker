@@ -254,7 +254,7 @@ export const SyllabusUploadDialog = ({ onAssignmentsExtracted }: SyllabusUploadD
           <div className="space-y-6">
             {/* Course Information */}
             <div className="space-y-4 rounded-lg border border-border bg-muted/30 p-4">
-              <h3 className="font-semibold">Course Details (Required)</h3>
+              <h3 className="font-semibold">Course Details</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="courseCode">Course Code</Label>
@@ -290,7 +290,7 @@ export const SyllabusUploadDialog = ({ onAssignmentsExtracted }: SyllabusUploadD
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="schedule">Schedule</Label>
+                  <Label htmlFor="schedule">Schedule (Optional)</Label>
                   <Input
                     id="schedule"
                     placeholder="e.g., Mon/Wed 10:00 AM"
