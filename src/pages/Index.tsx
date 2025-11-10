@@ -2,21 +2,45 @@ import { useState } from "react";
 import { AssignmentProvider, useAssignments } from "@/contexts/AssignmentContext";
 import { AssignmentTable } from "@/components/AssignmentTable";
 import { AddAssignmentDialog } from "@/components/AddAssignmentDialog";
+import { SyllabusUploadDialog } from "@/components/SyllabusUploadDialog";
 import { StatsBar } from "@/components/StatsBar";
 import { ToDoView } from "@/components/ToDoView";
 import { MyClassesView } from "@/components/MyClassesView";
 import { CalendarView } from "@/components/CalendarView";
 import { BookOpen, Calendar, CheckSquare, LayoutList } from "lucide-react";
+import { Assignment } from "@/types/assignment";
 
 type ViewType = "masterlist" | "todo" | "classes" | "calendar";
 
 const MainContent = () => {
   const [currentView, setCurrentView] = useState<ViewType>("masterlist");
-  const { assignments, updateStatus, toggleComplete, addAssignment, toggleToDoStatus } = useAssignments();
+  const { assignments, updateStatus, toggleComplete, addAssignment, toggleToDoStatus, classes, addClass } = useAssignments();
 
   const sortedAssignments = [...assignments].sort(
     (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
   );
+
+  const handleSyllabusAssignments = (
+    extractedAssignments: Omit<Assignment, "id">[],
+    courseInfo: { courseCode: string; courseTitle: string; instructor: string; schedule: string }
+  ) => {
+    // Add or update the class
+    const existingClass = classes.find(c => c.courseCode === courseInfo.courseCode);
+    if (!existingClass) {
+      addClass({
+        courseCode: courseInfo.courseCode,
+        courseTitle: courseInfo.courseTitle,
+        instructor: courseInfo.instructor,
+        schedule: courseInfo.schedule,
+        color: "#FFD7E5", // Default pastel pink
+      });
+    }
+
+    // Add all assignments
+    extractedAssignments.forEach(assignment => {
+      addAssignment(assignment);
+    });
+  };
 
   const navItems = [
     { id: "masterlist" as ViewType, label: "Masterlist", icon: LayoutList },
@@ -69,7 +93,10 @@ const MainContent = () => {
           <div className="space-y-6">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <StatsBar assignments={assignments} />
-              <AddAssignmentDialog onAdd={addAssignment} />
+              <div className="flex gap-3">
+                <SyllabusUploadDialog onAssignmentsExtracted={handleSyllabusAssignments} />
+                <AddAssignmentDialog onAdd={addAssignment} />
+              </div>
             </div>
             <div>
               <h2 className="mb-4 text-xl font-semibold text-foreground">

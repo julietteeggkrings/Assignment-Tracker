@@ -1,0 +1,4 @@
+project_id = "urlxowvaqovdikabiqdn"
+
+[functions.parse-syllabus]
+verify_jwt = false
