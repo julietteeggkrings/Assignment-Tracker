@@ -3,14 +3,18 @@ import { format } from "date-fns";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Plus, Calendar, User } from "lucide-react";
+import { Plus, Calendar, User, Pencil } from "lucide-react";
 import { ExportDropdown } from "@/components/ExportDropdown";
 import { exportClassesToCSV, exportClassesToExcel, copyToClipboard } from "@/lib/exportUtils";
 import { getContrastColor } from "@/lib/colorUtils";
 import { toast } from "@/hooks/use-toast";
+import { EditClassDialog } from "@/components/EditClassDialog";
+import { useState } from "react";
+import { Class } from "@/types/assignment";
 
 export const MyClassesView = () => {
-  const { assignments, classes } = useAssignments();
+  const { assignments, classes, updateClass } = useAssignments();
+  const [editingClass, setEditingClass] = useState<Class | null>(null);
 
   const today = format(new Date(), "EEEE, MMMM d, yyyy");
 
@@ -45,6 +49,14 @@ export const MyClassesView = () => {
   const handleCopyClipboard = async () => {
     await copyToClipboard(assignments);
     toast({ title: "Success", description: "Copied to clipboard" });
+  };
+
+  const handleUpdateClass = async (classId: string, updatedData: Partial<Class>) => {
+    await updateClass(classId, updatedData);
+    toast({ 
+      title: "Success", 
+      description: "✓ Class updated successfully!" 
+    });
   };
 
   return (
@@ -106,9 +118,18 @@ export const MyClassesView = () => {
               className="overflow-hidden shadow-md transition-all hover:shadow-lg"
             >
               <CardHeader 
-                className="p-4"
+                className="p-4 relative"
                 style={{ backgroundColor: classColor }}
               >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-2 right-2 h-8 w-8 hover:bg-white/20"
+                  onClick={() => setEditingClass(classData)}
+                  style={{ color: getContrastColor(classColor) }}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
                 <h3 
                   className="text-xl font-bold"
                   style={{ color: getContrastColor(classColor) }}
@@ -162,6 +183,15 @@ export const MyClassesView = () => {
           );
         })}
       </div>
+
+      {editingClass && (
+        <EditClassDialog
+          classData={editingClass}
+          open={!!editingClass}
+          onOpenChange={(open) => !open && setEditingClass(null)}
+          onSave={handleUpdateClass}
+        />
+      )}
     </div>
   );
 };
