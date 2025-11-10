@@ -128,7 +128,7 @@ export const CalendarView = () => {
                 <div
                   className={`mb-2 text-sm font-medium ${
                     isCurrentDay
-                      ? "flex h-6 w-6 items-center justify-center rounded-full bg-primary text-white"
+                      ? "flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-white"
                       : "text-foreground"
                   }`}
                 >
