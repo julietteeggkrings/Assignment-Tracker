@@ -13,12 +13,12 @@ export const StatsBar = ({ assignments }: StatsBarProps) => {
     <div className="flex flex-wrap items-center gap-6 rounded-lg bg-card p-4 shadow-sm">
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-muted-foreground">Total:</span>
-        <span className="text-2xl font-bold text-foreground">{total}</span>
+        <span className="text-2xl font-bold text-black dark:text-white">{total}</span>
       </div>
       <div className="h-8 w-px bg-border" />
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-muted-foreground">Completed:</span>
-        <span className="text-2xl font-bold text-status-completed">{completed}</span>
+        <span className="text-2xl font-bold text-black dark:text-white">{completed}</span>
       </div>
       <div className="h-8 w-px bg-border" />
       <div className="flex items-center gap-2">
