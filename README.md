@@ -1,73 +1,161 @@
-# Welcome to your Lovable project
+# Assignment Tracker
 
-## Project info
+A comprehensive web application for managing academic coursework, assignments, and deadlines.
 
-**URL**: https://lovable.dev/projects/7bbd0ab7-cdea-465f-bcef-e80c659cb8cd
+## Overview
 
-## How can I edit this code?
+Assignment Tracker is a student-focused productivity tool that helps you:
 
-There are several ways of editing your application.
+- **Track assignments** across multiple courses with due dates, times, and status updates
+- **Manage priorities** with a dedicated To-Do list and priority levels (High, Medium, Low)
+- **Organize classes** with course codes, titles, instructors, and color-coded organization
+- **Visualize deadlines** with an integrated calendar view
+- **Import syllabi** using AI-powered document parsing to automatically extract assignments
+- **Export data** in multiple formats (CSV, Excel) with styled formatting
+- **Stay on top** of overdue and upcoming assignments with automatic status tracking
 
-**Use Lovable**
+## Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7bbd0ab7-cdea-465f-bcef-e80c659cb8cd) and start prompting.
+### 📚 Masterlist View
+- Complete overview of all assignments sorted by urgency
+- Color-coded status indicators (Not Started, In Progress, Submitted, Completed, Overdue)
+- Quick status updates and editing
+- Days-until-due calculations with visual urgency indicators
 
-Changes made via Lovable will be committed automatically to this repo.
+### ✅ To-Do List
+- Dedicated task list for focused work
+- Priority management (High/Low)
+- Completion tracking separate from main status
+- Quick add/remove from masterlist
 
-**Use your preferred IDE**
+### 🎓 My Classes
+- Course management with custom colors
+- Progress tracking per class
+- Assignment statistics (total, completed, percentage)
+- Edit course details
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 📅 Calendar View
+- Visual representation of all deadlines
+- Color-coded by class
+- Quick reference for planning
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 📄 Import & Export
+- **AI-Powered Import**: Upload PDF syllabi and automatically extract assignments
+- **Styled Excel Export**: Download beautifully formatted spreadsheets with colors, borders, and styling
+- **CSV Export**: Plain text format for maximum compatibility
+- **Copy to Clipboard**: Quick data sharing
 
-Follow these steps:
+## Technology Stack
 
+This project is built with modern web technologies:
+
+- **Vite** - Fast build tool and dev server
+- **TypeScript** - Type-safe JavaScript
+- **React** - UI component library
+- **shadcn/ui** - Beautiful, accessible component system
+- **Tailwind CSS** - Utility-first CSS framework
+- **Supabase** - Backend database and authentication
+- **ExcelJS** - Styled Excel export generation
+- **date-fns** - Date manipulation and formatting
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- npm or yarn package manager
+
+### Installation
+
+1. Clone the repository:
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
 git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
 cd <YOUR_PROJECT_NAME>
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+2. Install dependencies:
+```sh
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+3. Start the development server:
+```sh
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Environment Setup
 
-**Use GitHub Codespaces**
+The project uses Supabase for backend services. Environment variables are managed automatically, but you can configure them in the `.env` file if needed.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Usage
 
-## What technologies are used for this project?
+1. **Sign Up/Sign In** - Create an account to save your data
+2. **Add Classes** - Set up your courses with codes, titles, and instructors
+3. **Import Syllabus** - Upload a PDF syllabus to auto-extract assignments
+4. **Add Assignments** - Manually add assignments or let the AI extract them
+5. **Track Progress** - Update statuses as you work through assignments
+6. **Use To-Do List** - Add urgent tasks to your focused to-do list
+7. **Export Data** - Download your assignments in Excel or CSV format
 
-This project is built with:
+## Project Structure
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```
+src/
+├── components/        # React components
+├── contexts/          # React context providers
+├── hooks/             # Custom React hooks
+├── lib/               # Utility functions
+├── pages/             # Page components
+├── types/             # TypeScript type definitions
+└── integrations/      # Third-party integrations
+```
 
-## How can I deploy this project?
+## Development
 
-Simply open [Lovable](https://lovable.dev/projects/7bbd0ab7-cdea-465f-bcef-e80c659cb8cd) and click on Share -> Publish.
+### Available Scripts
 
-## Can I connect a custom domain to my Lovable project?
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
-Yes, you can!
+### Making Changes
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Edit files in the `src/` directory. The dev server will automatically reload when you save changes.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Deployment
+
+This project can be deployed to any static hosting service:
+
+- Netlify
+- Vercel
+- GitHub Pages
+- AWS S3 + CloudFront
+- Or any other static hosting provider
+
+Build the project first:
+```sh
+npm run build
+```
+
+Then deploy the contents of the `dist/` directory.
+
+## Contributing
+
+Contributions are welcome! Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Support
+
+For issues or questions, please open an issue in the GitHub repository.
