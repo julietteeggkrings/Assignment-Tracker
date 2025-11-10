@@ -17,6 +17,8 @@ export type AssignmentType =
 
 export type Priority = "High" | "Medium" | "Low";
 
+export type ToDoPriority = "High" | "Low";
+
 export interface Assignment {
   id: string;
   classId: string;
@@ -30,6 +32,10 @@ export interface Assignment {
   notes?: string;
   weight?: number;
   completed: boolean;
+  // To-Do List tracking (separate from main status)
+  addedToToDo: boolean;
+  toDoCompleted: boolean;
+  toDoPriority: ToDoPriority;
 }
 
 export interface Class {

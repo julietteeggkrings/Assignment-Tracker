@@ -12,7 +12,7 @@ type ViewType = "masterlist" | "todo" | "classes" | "calendar";
 
 const MainContent = () => {
   const [currentView, setCurrentView] = useState<ViewType>("masterlist");
-  const { assignments, updateStatus, toggleComplete, addAssignment } = useAssignments();
+  const { assignments, updateStatus, toggleComplete, addAssignment, toggleToDoStatus } = useAssignments();
 
   const sortedAssignments = [...assignments].sort(
     (a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
@@ -79,6 +79,7 @@ const MainContent = () => {
                 assignments={sortedAssignments}
                 onUpdateStatus={updateStatus}
                 onToggleComplete={toggleComplete}
+                onToggleToDoStatus={toggleToDoStatus}
               />
             </div>
           </div>

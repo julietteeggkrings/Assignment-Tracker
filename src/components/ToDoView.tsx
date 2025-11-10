@@ -3,43 +3,34 @@ import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatDate } from "@/lib/assignmentUtils";
-import { Priority } from "@/types/assignment";
+import { getToDoPriorityColor } from "@/lib/toDoUtils";
+import { ToDoPriority } from "@/types/assignment";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { X } from "lucide-react";
 
 export const ToDoView = () => {
-  const { assignments, toggleComplete, updateAssignment } = useAssignments();
+  const { assignments, toggleToDoComplete, updateToDoPriority, toggleToDoStatus } = useAssignments();
 
-  const incompleteTasks = assignments
-    .filter(a => a.status !== "Completed" && a.status !== "Submitted")
+  // Only show assignments that are added to To-Do list
+  const toDoTasks = assignments
+    .filter(a => a.addedToToDo)
     .sort((a, b) => {
-      // Sort by priority first (High > Medium > Low)
-      const priorityOrder = { High: 0, Medium: 1, Low: 2 };
-      if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
-        return priorityOrder[a.priority] - priorityOrder[b.priority];
+      // Sort by priority first (High > Low)
+      const priorityOrder = { High: 0, Low: 1 };
+      if (priorityOrder[a.toDoPriority] !== priorityOrder[b.toDoPriority]) {
+        return priorityOrder[a.toDoPriority] - priorityOrder[b.toDoPriority];
       }
       // Then by date
       return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
     });
 
-  const completedCount = assignments.filter(
-    a => a.status === "Completed" || a.status === "Submitted"
-  ).length;
-  const totalCount = assignments.length;
+  const toDoCompletedCount = toDoTasks.filter(a => a.toDoCompleted).length;
+  const totalToDoCount = toDoTasks.length;
 
   const today = format(new Date(), "EEEE, MMMM d, yyyy");
 
-  const getPriorityBadge = (priority: Priority) => {
-    const styles = {
-      High: "bg-status-overdue text-white",
-      Medium: "bg-status-in-progress text-white",
-      Low: "bg-primary/70 text-white",
-    };
-    return styles[priority];
-  };
-
-  const handlePriorityChange = (id: string, priority: Priority) => {
-    updateAssignment(id, { priority });
+  const handlePriorityChange = (id: string, priority: ToDoPriority) => {
+    updateToDoPriority(id, priority);
   };
 
   return (
@@ -52,20 +43,12 @@ export const ToDoView = () => {
             <p className="mt-1 text-sm text-muted-foreground">Today is: {today}</p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-4xl font-bold text-primary">{completedCount}</span>
+            <span className="text-4xl font-bold text-primary">{toDoCompletedCount}</span>
             <span className="text-2xl text-muted-foreground">/</span>
-            <span className="text-4xl font-bold text-foreground">{totalCount}</span>
+            <span className="text-4xl font-bold text-foreground">{totalToDoCount}</span>
             <span className="ml-2 text-sm text-muted-foreground">Completed</span>
           </div>
         </div>
-      </div>
-
-      {/* Action Bar */}
-      <div className="flex justify-end">
-        <Button variant="outline" className="gap-2">
-          <Plus className="h-4 w-4" />
-          New Task
-        </Button>
       </div>
 
       {/* Tasks Table */}
@@ -88,59 +71,84 @@ export const ToDoView = () => {
               <th className="px-4 py-3 text-left text-sm font-semibold text-foreground">
                 Task
               </th>
+              <th className="px-4 py-3 text-center text-sm font-semibold text-foreground">
+                Remove
+              </th>
             </tr>
           </thead>
           <tbody>
-            {incompleteTasks.map(task => (
+            {toDoTasks.map(task => (
               <tr
                 key={task.id}
-                className="border-b border-border transition-colors hover:bg-muted/30"
+                className={`border-b border-border transition-colors hover:bg-muted/30 ${
+                  task.toDoCompleted ? "bg-muted/50 opacity-60" : ""
+                }`}
               >
                 <td className="px-4 py-3 text-center">
                   <Checkbox
-                    checked={task.completed}
-                    onCheckedChange={() => toggleComplete(task.id)}
+                    checked={task.toDoCompleted}
+                    onCheckedChange={() => toggleToDoComplete(task.id)}
                     className="mx-auto"
                   />
                 </td>
                 <td className="px-4 py-3">
                   <Select
-                    value={task.priority}
-                    onValueChange={(value: Priority) =>
+                    value={task.toDoPriority}
+                    onValueChange={(value: ToDoPriority) =>
                       handlePriorityChange(task.id, value)
                     }
                   >
                     <SelectTrigger
-                      className={`w-28 text-xs font-medium ${getPriorityBadge(
-                        task.priority
+                      className={`w-24 text-xs font-medium ${getToDoPriorityColor(
+                        task.toDoPriority
                       )}`}
                     >
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="High">High</SelectItem>
-                      <SelectItem value="Medium">Medium</SelectItem>
                       <SelectItem value="Low">Low</SelectItem>
                     </SelectContent>
                   </Select>
                 </td>
-                <td className="px-4 py-3 text-sm">{formatDate(task.dueDate)}</td>
+                <td className={`px-4 py-3 text-sm ${task.toDoCompleted ? "line-through" : ""}`}>
+                  {formatDate(task.dueDate)}
+                </td>
                 <td className="px-4 py-3">
-                  <span className="inline-block rounded-md bg-pastel-lavender px-2 py-1 text-xs font-medium">
+                  <span
+                    className={`inline-block rounded-md bg-pastel-lavender px-2 py-1 text-xs font-medium ${
+                      task.toDoCompleted ? "line-through" : ""
+                    }`}
+                  >
                     {task.className}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-sm font-medium">{task.title}</td>
+                <td className={`px-4 py-3 text-sm font-medium ${task.toDoCompleted ? "line-through" : ""}`}>
+                  {task.title}
+                </td>
+                <td className="px-4 py-3 text-center">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => toggleToDoStatus(task.id)}
+                    className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {incompleteTasks.length === 0 && (
-        <div className="py-12 text-center">
+      {toDoTasks.length === 0 && (
+        <div className="rounded-lg border border-border bg-card py-12 text-center">
           <p className="text-lg text-muted-foreground">
-            No pending tasks! Great job! 🎉
+            No tasks in your To-Do list yet.
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Go to Masterlist and check the 📌 To-Do box to add assignments here!
           </p>
         </div>
       )}

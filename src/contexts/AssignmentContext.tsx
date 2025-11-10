@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { Assignment, AssignmentStatus, Class } from "@/types/assignment";
+import { Assignment, AssignmentStatus, Class, ToDoPriority } from "@/types/assignment";
 import { autoUpdateStatus } from "@/lib/assignmentUtils";
 
 interface AssignmentContextType {
@@ -10,6 +10,9 @@ interface AssignmentContextType {
   deleteAssignment: (id: string) => void;
   updateStatus: (id: string, status: AssignmentStatus) => void;
   toggleComplete: (id: string) => void;
+  toggleToDoStatus: (id: string) => void;
+  toggleToDoComplete: (id: string) => void;
+  updateToDoPriority: (id: string, priority: ToDoPriority) => void;
   addClass: (classData: Omit<Class, "id">) => void;
   updateClass: (id: string, updates: Partial<Class>) => void;
 }
@@ -36,6 +39,9 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
       status: "Not Started",
       priority: "High",
       completed: false,
+      addedToToDo: true,
+      toDoCompleted: false,
+      toDoPriority: "High",
     },
     {
       id: "2",
@@ -47,6 +53,9 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
       status: "In Progress",
       priority: "High",
       completed: false,
+      addedToToDo: true,
+      toDoCompleted: false,
+      toDoPriority: "Low",
     },
     {
       id: "3",
@@ -58,6 +67,9 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
       status: "Submitted",
       priority: "Medium",
       completed: true,
+      addedToToDo: false,
+      toDoCompleted: false,
+      toDoPriority: "Low",
     },
     {
       id: "4",
@@ -69,6 +81,9 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
       status: "Not Started",
       priority: "Low",
       completed: false,
+      addedToToDo: false,
+      toDoCompleted: false,
+      toDoPriority: "Low",
     },
     {
       id: "5",
@@ -80,6 +95,9 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
       status: "In Progress",
       priority: "High",
       completed: false,
+      addedToToDo: true,
+      toDoCompleted: false,
+      toDoPriority: "High",
     },
   ]);
 
@@ -180,6 +198,42 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
+  const toggleToDoStatus = (id: string) => {
+    setAssignments(prev =>
+      prev.map(assignment =>
+        assignment.id === id
+          ? {
+              ...assignment,
+              addedToToDo: !assignment.addedToToDo,
+              // Reset To-Do completion when removed from list
+              toDoCompleted: !assignment.addedToToDo ? false : assignment.toDoCompleted,
+            }
+          : assignment
+      )
+    );
+  };
+
+  const toggleToDoComplete = (id: string) => {
+    setAssignments(prev =>
+      prev.map(assignment =>
+        assignment.id === id
+          ? {
+              ...assignment,
+              toDoCompleted: !assignment.toDoCompleted,
+            }
+          : assignment
+      )
+    );
+  };
+
+  const updateToDoPriority = (id: string, priority: ToDoPriority) => {
+    setAssignments(prev =>
+      prev.map(assignment =>
+        assignment.id === id ? { ...assignment, toDoPriority: priority } : assignment
+      )
+    );
+  };
+
   const addClass = (classData: Omit<Class, "id">) => {
     const newClass: Class = {
       ...classData,
@@ -204,6 +258,9 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
         deleteAssignment,
         updateStatus,
         toggleComplete,
+        toggleToDoStatus,
+        toggleToDoComplete,
+        updateToDoPriority,
         addClass,
         updateClass,
       }}

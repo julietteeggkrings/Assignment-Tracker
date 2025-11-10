@@ -24,6 +24,9 @@ export const AddAssignmentDialog = ({ onAdd }: AddAssignmentDialogProps) => {
     priority: "Medium" as Priority,
     notes: "",
     completed: false,
+    addedToToDo: false,
+    toDoCompleted: false,
+    toDoPriority: "Low" as const,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -40,6 +43,9 @@ export const AddAssignmentDialog = ({ onAdd }: AddAssignmentDialogProps) => {
       priority: "Medium",
       notes: "",
       completed: false,
+      addedToToDo: false,
+      toDoCompleted: false,
+      toDoPriority: "Low",
     });
     setOpen(false);
   };
