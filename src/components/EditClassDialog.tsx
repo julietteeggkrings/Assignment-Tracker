@@ -3,6 +3,7 @@ import { Class } from "@/types/assignment";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -39,6 +40,7 @@ export const EditClassDialog = ({ classData, open, onOpenChange, onSave }: EditC
   });
 
   const handleSave = () => {
+    console.log('Saving class with color:', formData.color);
     onSave(classData.id, formData);
     onOpenChange(false);
   };
@@ -48,6 +50,9 @@ export const EditClassDialog = ({ classData, open, onOpenChange, onSave }: EditC
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Edit Class</DialogTitle>
+          <DialogDescription>
+            Update class details and customize the color used throughout the app
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">

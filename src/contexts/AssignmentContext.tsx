@@ -327,6 +327,8 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
     if (updates.schedule) dbUpdates.schedule = updates.schedule;
     if (updates.color) dbUpdates.color = updates.color;
 
+    console.log('Updating class:', id, 'with:', dbUpdates);
+
     const { error } = await supabase
       .from('classes')
       .update(dbUpdates)
@@ -336,6 +338,10 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
     if (error) {
       console.error('Error updating class:', error);
       toast({ title: "Error", description: "Failed to update class", variant: "destructive" });
+    } else {
+      console.log('Class updated successfully, reloading classes...');
+      // Immediately reload classes to ensure UI updates
+      await loadClasses();
     }
   };
 
