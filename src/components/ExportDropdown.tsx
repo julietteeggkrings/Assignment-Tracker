@@ -21,7 +21,7 @@ export const ExportDropdown = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="gap-2">
+        <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
           <Download className="h-4 w-4" />
           Export
         </Button>

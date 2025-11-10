@@ -53,7 +53,7 @@ export const AddAssignmentDialog = ({ onAdd }: AddAssignmentDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2 bg-primary hover:bg-primary/90">
+        <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
           <Plus className="h-4 w-4" />
           Add Assignment
         </Button>

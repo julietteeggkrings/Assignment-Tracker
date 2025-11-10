@@ -23,7 +23,7 @@ export const StatsBar = ({ assignments }: StatsBarProps) => {
       <div className="h-8 w-px bg-border" />
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-muted-foreground">Progress:</span>
-        <span className="text-2xl font-bold text-primary">{percentage}%</span>
+        <span className="text-2xl font-bold text-gray-700 dark:text-gray-300">{percentage}%</span>
       </div>
     </div>
   );
