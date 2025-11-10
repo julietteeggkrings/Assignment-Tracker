@@ -29,18 +29,18 @@ const MainContent = () => {
     const daysA = calculateDaysUntilDue(a.dueDate);
     const daysB = calculateDaysUntilDue(b.dueDate);
     
-    // Both are future/today (0 or positive)
-    if (daysA >= 0 && daysB >= 0) {
-      return daysA - daysB; // Ascending: 0, 1, 2, 3...
-    }
-    
-    // Both are overdue (negative)
+    // Both are overdue (negative) - most overdue first
     if (daysA < 0 && daysB < 0) {
-      return Math.abs(daysA) - Math.abs(daysB); // By absolute value: -1, -2, -3...
+      return daysA - daysB; // -14 before -3 (most overdue first)
     }
     
-    // One is future, one is overdue - future assignments come first
-    return daysA >= 0 ? -1 : 1;
+    // Both are future/today (0 or positive) - soonest first
+    if (daysA >= 0 && daysB >= 0) {
+      return daysA - daysB; // 0, 1, 2, 3...
+    }
+    
+    // One is overdue, one is future - overdue comes FIRST
+    return daysA < 0 ? -1 : 1;
   });
 
   const handleSyllabusAssignments = (
