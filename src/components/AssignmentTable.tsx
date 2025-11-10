@@ -34,7 +34,7 @@ export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleToDoStatu
             const daysUntil = calculateDaysUntilDue(assignment.dueDate);
             const urgencyClass = getUrgencyColor(daysUntil, assignment.status);
             
-            const isCompletedOrSubmitted = assignment.status === "Completed" || assignment.status === "Submitted";
+            const isCompletedOrSubmitted = assignment.status === "Completed";
             
             return (
               <tr 
@@ -54,7 +54,6 @@ export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleToDoStatu
                     <SelectContent>
                       <SelectItem value="Not Started">Not Started</SelectItem>
                       <SelectItem value="In Progress">In Progress</SelectItem>
-                      <SelectItem value="Submitted">Submitted</SelectItem>
                       <SelectItem value="Completed">Completed</SelectItem>
                     </SelectContent>
                   </Select>
