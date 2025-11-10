@@ -32,10 +32,14 @@ export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleComplete,
             const daysUntil = calculateDaysUntilDue(assignment.dueDate);
             const urgencyClass = getUrgencyColor(daysUntil, assignment.status);
             
+            const isCompletedOrSubmitted = assignment.status === "Completed" || assignment.status === "Submitted";
+            
             return (
               <tr 
                 key={assignment.id} 
-                className="border-b border-border transition-colors hover:bg-muted/30"
+                className={`border-b border-border transition-colors hover:bg-muted/30 ${
+                  isCompletedOrSubmitted ? "line-through opacity-70" : ""
+                }`}
               >
                 <td className="px-4 py-3 text-center">
                   <Checkbox 
