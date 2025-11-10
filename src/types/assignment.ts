@@ -1,4 +1,5 @@
 export type AssignmentStatus = 
+  | "Status"
   | "Not Started" 
   | "In Progress" 
   | "Submitted" 

@@ -97,7 +97,7 @@ export const SyllabusPreviewTable = ({
         type: a.type as AssignmentType,
         dueDate: a.dueDate,
         dueTime: a.dueTime,
-        status: "Not Started",
+        status: "Status",
         priority: "Medium",
         notes: a.notes,
         weight: a.weight,

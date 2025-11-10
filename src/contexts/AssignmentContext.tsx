@@ -256,7 +256,7 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
           ? {
               ...assignment,
               completed: !assignment.completed,
-              status: !assignment.completed ? "Completed" : "Not Started",
+              status: !assignment.completed ? "Completed" : "Status",
             }
           : assignment
       )

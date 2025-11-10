@@ -58,6 +58,7 @@ export const AssignmentTable = ({ assignments, classes, onUpdateStatus, onToggle
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="Status">Status</SelectItem>
                       <SelectItem value="Not Started">Not Started</SelectItem>
                       <SelectItem value="In Progress">In Progress</SelectItem>
                       <SelectItem value="Completed">Completed</SelectItem>
