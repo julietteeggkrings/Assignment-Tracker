@@ -148,7 +148,6 @@ const MainContent = () => {
               <AssignmentTable
                 assignments={sortedAssignments}
                 onUpdateStatus={updateStatus}
-                onToggleComplete={toggleComplete}
                 onToggleToDoStatus={toggleToDoStatus}
               />
             </div>

@@ -6,17 +6,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 interface AssignmentTableProps {
   assignments: Assignment[];
   onUpdateStatus: (id: string, status: AssignmentStatus) => void;
-  onToggleComplete: (id: string) => void;
   onToggleToDoStatus: (id: string) => void;
 }
 
-export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleComplete, onToggleToDoStatus }: AssignmentTableProps) => {
+export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleToDoStatus }: AssignmentTableProps) => {
   return (
     <div className="overflow-x-auto rounded-lg border border-border shadow-sm">
       <table className="w-full border-collapse bg-card">
         <thead>
           <tr className="border-b border-border bg-muted/50">
-            <th className="sticky top-0 px-4 py-3 text-center text-sm font-semibold text-foreground">📌 To-Do</th>
             <th className="sticky top-0 px-4 py-3 text-left text-sm font-semibold text-foreground">Status</th>
             <th className="sticky top-0 px-4 py-3 text-left text-sm font-semibold text-foreground">Day</th>
             <th className="sticky top-0 px-4 py-3 text-left text-sm font-semibold text-foreground">Due Date</th>
@@ -24,7 +22,7 @@ export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleComplete,
             <th className="sticky top-0 px-4 py-3 text-left text-sm font-semibold text-foreground">Type</th>
             <th className="sticky top-0 px-4 py-3 text-left text-sm font-semibold text-foreground">Title</th>
             <th className="sticky top-0 px-4 py-3 text-center text-sm font-semibold text-foreground">Days Until</th>
-            <th className="sticky top-0 px-4 py-3 text-center text-sm font-semibold text-foreground">Done</th>
+            <th className="sticky top-0 px-4 py-3 text-center text-sm font-semibold text-foreground">📌 To-Do</th>
           </tr>
         </thead>
         <tbody>
@@ -41,13 +39,6 @@ export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleComplete,
                   isCompletedOrSubmitted ? "line-through opacity-70" : ""
                 }`}
               >
-                <td className="px-4 py-3 text-center">
-                  <Checkbox 
-                    checked={assignment.addedToToDo}
-                    onCheckedChange={() => onToggleToDoStatus(assignment.id)}
-                    className="mx-auto data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-                  />
-                </td>
                 <td className="px-4 py-3">
                   <Select 
                     value={assignment.status} 
@@ -78,8 +69,9 @@ export const AssignmentTable = ({ assignments, onUpdateStatus, onToggleComplete,
                 </td>
                 <td className="px-4 py-3 text-center">
                   <Checkbox 
-                    checked={assignment.completed}
-                    onCheckedChange={() => onToggleComplete(assignment.id)}
+                    checked={assignment.addedToToDo}
+                    onCheckedChange={() => onToggleToDoStatus(assignment.id)}
+                    className="mx-auto data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                   />
                 </td>
               </tr>
