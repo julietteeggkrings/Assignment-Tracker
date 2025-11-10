@@ -92,7 +92,7 @@ export const SyllabusPreviewTable = ({
       .filter((a) => a.included && a.title.trim())
       .map((a) => ({
         classId: courseInfo.courseCode,
-        className: courseInfo.courseCode,
+        className: `${courseInfo.courseCode} - ${courseInfo.courseTitle}`,
         title: a.title,
         type: a.type as AssignmentType,
         dueDate: a.dueDate,
