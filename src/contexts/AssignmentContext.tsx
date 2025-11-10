@@ -210,7 +210,13 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const deleteAssignment = async (id: string) => {
-    if (!user) return;
+    if (!user) {
+      console.error('Cannot delete assignment: No user logged in');
+      toast({ title: "Error", description: "Please sign in to delete assignments", variant: "destructive" });
+      return;
+    }
+
+    console.log('Deleting assignment:', id);
 
     const { error } = await supabase
       .from('assignments')
@@ -221,6 +227,11 @@ export const AssignmentProvider = ({ children }: { children: ReactNode }) => {
     if (error) {
       console.error('Error deleting assignment:', error);
       toast({ title: "Error", description: "Failed to delete assignment", variant: "destructive" });
+    } else {
+      console.log('Assignment deleted successfully');
+      toast({ title: "Success", description: "Assignment deleted" });
+      // Refresh list to ensure UI updates
+      loadAssignments();
     }
   };
 
