@@ -45,8 +45,7 @@ export const AssignmentTable = ({ assignments, classes, onUpdateStatus, onToggle
             return (
               <tr 
                 key={assignment.id} 
-                style={{ backgroundColor: classColor }}
-                className={`border-b border-black transition-colors hover:brightness-95 ${
+                className={`border-b border-border bg-card transition-colors hover:bg-muted/50 ${
                   isCompletedOrSubmitted ? "line-through opacity-70" : ""
                 }`}
               >
